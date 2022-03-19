@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 
 function DataGrid({ data }) {
   const [response, setResponse] = useState();
-  const date = new Date();
   useEffect(() => {
     setResponse(data);
   }, [data]);
@@ -84,10 +83,10 @@ function App() {
         <Button className="col-1" onClick={handleSave} variant="primary">
           Submit
         </Button>
-        &nbsp;
+        {/* &nbsp;
         <Button className="col-2" onClick={handleSave} variant="secondary">
           Export Report
-        </Button>
+        </Button> */}
       </div>
       <br></br>
       {response ? <DataGrid data={response} /> : null}
