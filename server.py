@@ -28,33 +28,12 @@ def uploadFile():
     file.save(os.path.join(filename))
     response = []
     with open(filename) as f:
-        # file_content = f.read()
         for line in f:
-            # dict1.append(line.strip())
-            print("https://www.virustotal.com/api/v3/files/"+line.strip());
+            # print("https://www.virustotal.com/api/v3/files/"+line.strip());
             req=requests.get("https://www.virustotal.com/api/v3/files/"+line.strip(), headers={"x-apikey": "4fe780bd9b32c34f4f7e9b7c6ff12569961618cda34096355771a958e2fc4bec"})
-            # print(req.json())
             resp = req.json()
             
-            # if req.status_code == 200:
-            #     print(req.status_code);
-            #     print(resp['data']['attributes']);
-            
             if req.status_code == 200:
-                # if(resp['data']):
-                #     if(resp['data']['attributes']):
-                #         if(resp['data']['attributes']['meaningful_name']): 
-                #             meaningful_name = resp['data']['attributes']['meaningful_name']
-
-                # if(resp['data']):
-                #     if(resp['data']['attributes']):
-                #         if(resp['data']['attributes']['names']): 
-                #             names = resp['data']['attributes']['names']
-
-                # if(resp and resp['data'] and resp['data']['attributes'] and resp['data']['attributes']['names']):
-                #     names = resp['data']['attributes']['names']
-
-                # resp_json = json.loads(req);
                 if 'data' in resp:
                     if 'attributes' in resp['data']:
                         if 'meaningful_name' in resp['data']['attributes']:
@@ -71,7 +50,7 @@ def uploadFile():
                     "number_of_engine": len(names),
                     "scan_date" : datetime.datetime.now()
                 })
-    print(response);
+    # print(response);
     return {'data': response}
 
 if __name__ == '__main__':
