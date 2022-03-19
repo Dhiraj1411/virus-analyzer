@@ -18,17 +18,17 @@ function DataGrid({ data }) {
           <th>hash_value (MD5 or Sha256)</th>
           <th>Fortinet detection name </th>
           <th>Number of engines detected</th>
-          <th>Scan Date </th>
+          <th>Scan Date</th>
         </tr>
       </thead>
       <tbody>
         {response &&
-          response["hashkey"].map((item) => (
+          response["data"].map((item) => (
             <tr>
-              <td>{item}</td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{item.hash_key}</td>
+              <td>{item.detection_name}</td>
+              <td>{item.number_of_engine}</td>
+              <td>{item.scan_date}</td>
             </tr>
           ))}
       </tbody>
