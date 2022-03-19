@@ -3,7 +3,18 @@ import Table from "react-bootstrap/Table";
 import { FilePicker } from "react-file-picker";
 import Form from "react-bootstrap/Form";
 import "./App.css";
+import Spinner from "react-bootstrap/Spinner";
 import { useEffect, useState } from "react";
+
+const MySpinner = function () {
+  return (
+    <div>
+      <Spinner animation="grow" size="sm" />
+      <Spinner animation="grow" size="sm" />
+      <Spinner animation="grow" size="sm" />
+    </div>
+  );
+};
 
 function DataGrid({ data }) {
   const [response, setResponse] = useState();
@@ -39,11 +50,12 @@ function App() {
   const [filename, setFileName] = useState("");
   const [file, setFile] = useState([]);
   const [response, setResponse] = useState(null);
+  const [showSpinner, setShowSpinner] = useState(false);
   const handleSave = function () {
     setResponse(null);
     const formData = new FormData();
     formData.append("file", file);
-
+    setShowSpinner(true);
     fetch("http://localhost:8080/upload", {
       method: "POST",
       mode: "cors",
@@ -53,6 +65,7 @@ function App() {
       .then((data) => {
         console.log(data);
         setResponse(data);
+        setShowSpinner(false);
       });
   };
   return (
@@ -89,6 +102,7 @@ function App() {
         </Button> */}
       </div>
       <br></br>
+      {showSpinner ? <MySpinner /> : null}
       {response ? <DataGrid data={response} /> : null}
     </div>
   );
