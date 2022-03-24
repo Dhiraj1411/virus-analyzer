@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_from_directory, render_template
 from flask_restful import Resource, Api
 from werkzeug.utils import secure_filename
 import datetime
@@ -8,7 +8,7 @@ from flask_cors import CORS
 import sys
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 api = Api(app)
 CORS(app)
 port = 8080
@@ -18,8 +18,12 @@ if sys.argv.__len__() > 1:
 print("Api running on port : {} ".format(port))
 
 @app.route('/')
-def get(self):
-    return {'hello': 'world'}
+def home():
+    return app.send_static_file('index.html')
+
+@app.route('/test')
+def test():
+    return "Hello From Docker"
     
 @app.route('/upload',methods = ['POST'])
 def uploadFile():
@@ -48,6 +52,13 @@ def uploadFile():
                     "hash_key":line.strip(),
                     "detection_name":meaningful_name,
                     "number_of_engine": len(names),
+                    "scan_date" : datetime.datetime.now()
+                })
+            else:
+                response.append({
+                    "hash_key":line.strip(),
+                    "detection_name":"null",
+                    "number_of_engine": "null",
                     "scan_date" : datetime.datetime.now()
                 })
     # print(response);

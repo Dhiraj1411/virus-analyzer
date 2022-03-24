@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  web:
+    build: ./web
+    ports:
+      - 3000:3000
+  api:
+    build: ./api
+    ports:
+      - 8080:8080
+    # networks: ["esnet"]
+    # depends_on: ["web"]
