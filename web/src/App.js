@@ -19,6 +19,7 @@ const MySpinner = function () {
 function DataGrid({ data }) {
   const [response, setResponse] = useState();
   useEffect(() => {
+    console.log(data);
     setResponse(data);
   }, [data]);
   return (
@@ -66,6 +67,31 @@ function App() {
         console.log(data);
         setResponse(data);
         setShowSpinner(false);
+      })
+      .catch((error) => {
+        setShowSpinner(false);
+        alert("Error occurred");
+        console.log(error);
+      });
+  };
+  const fetchLatest = function () {
+    setResponse(null);
+    setShowSpinner(true);
+    fetch("http://localhost:8080/getdata", {
+      method: "GET",
+      mode: "cors",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("hello");
+        console.log(data);
+        setResponse(data);
+        setShowSpinner(false);
+      })
+      .catch((error) => {
+        setShowSpinner(false);
+        console.log(error);
+        alert("Error Occurred");
       });
   };
   return (
@@ -73,7 +99,7 @@ function App() {
       <div className="row">
         <FilePicker
           style={{ width: "unset" }}
-          className="col-3"
+          className="col-2"
           extensions={["txt"]}
           onChange={(FileObject) => {
             setFileName(FileObject.name);
@@ -85,7 +111,7 @@ function App() {
         >
           <Button variant="secondary">Click to upload text file</Button>
         </FilePicker>
-        <Form className="col-4">
+        <Form className="col-6">
           <Form.Control
             disabled
             value={filename}
@@ -93,13 +119,17 @@ function App() {
             placeholder="File name"
           />
         </Form>
-        <Button className="col-1" onClick={handleSave} variant="primary">
+        <Button className="col-2" onClick={handleSave} variant="primary">
           Submit
         </Button>
-        {/* &nbsp;
-        <Button className="col-2" onClick={handleSave} variant="secondary">
-          Export Report
-        </Button> */}
+        <Button
+          style={{ marginLeft: "10px" }}
+          className="col-2"
+          onClick={fetchLatest}
+          variant="primary"
+        >
+          Refresh
+        </Button>
       </div>
       <br></br>
       {showSpinner ? <MySpinner /> : null}
