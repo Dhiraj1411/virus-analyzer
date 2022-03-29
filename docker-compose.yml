@@ -3,10 +3,10 @@ services:
   web:
     build: ./web
     ports:
-      - 3000:3000
+      - 8080:80
   api:
     build: ./api
     ports:
-      - 8080:8080
+      - 5000:5000
     # networks: ["esnet"]
     # depends_on: ["web"]

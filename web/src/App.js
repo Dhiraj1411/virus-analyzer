@@ -26,6 +26,7 @@ function DataGrid({ data }) {
     <Table striped bordered hover>
       <thead>
         <tr>
+          <th>Sl no.</th>
           <th>hash_value (MD5 or Sha256)</th>
           <th>Fortinet detection name </th>
           <th>Number of engines detected</th>
@@ -34,8 +35,9 @@ function DataGrid({ data }) {
       </thead>
       <tbody>
         {response &&
-          response["data"].map((item) => (
+          response["data"].map((item, index) => (
             <tr>
+              <td>{index}</td>
               <td>{item.hash_key}</td>
               <td>{item.detection_name}</td>
               <td>{item.number_of_engine}</td>
@@ -57,7 +59,7 @@ function App() {
     const formData = new FormData();
     formData.append("file", file);
     setShowSpinner(true);
-    fetch("http://localhost:8080/upload", {
+    fetch("http://localhost:5000/upload", {
       method: "POST",
       mode: "cors",
       body: formData,
@@ -77,7 +79,7 @@ function App() {
   const fetchLatest = function () {
     setResponse(null);
     setShowSpinner(true);
-    fetch("http://localhost:8080/getdata", {
+    fetch("http://localhost:5000/getdata", {
       method: "GET",
       mode: "cors",
     })

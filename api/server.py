@@ -12,7 +12,7 @@ import os
 app = Flask(__name__, static_folder='./build', static_url_path='/')
 api = Api(app)
 CORS(app)
-port = 8080
+port = 5000
 
 if sys.argv.__len__() > 1:
     port = sys.argv[1]
@@ -57,6 +57,9 @@ def getjson():
         return []
 
 def isHaskeyExpired(hashkey, local_data):
+    print("I am in isHashKeyExpired")
+    print(hashkey)
+    print(local_data)
     if hashkey in local_data:
         data = local_data['haskey']
         if "scan_date" in data:
@@ -74,11 +77,20 @@ def isHaskeyExpired(hashkey, local_data):
 
 def getUnmappedOrExpiredHashkey (filename, local_data):
     hashKeyList = []
+    local_stored_hashkey = {}
+    for item in local_data:
+        local_stored_hashkey[item['hash_key']] = {
+            "detection_name": item["detection_name"], 
+            "number_of_engine": item["number_of_engine"], 
+            "scan_date": item["scan_date"]
+        }
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    print(local_stored_hashkey)
     if local_data is not None:
         with open(filename) as f:
             for hash in f:
-                if hash in local_data:
-                    if isHaskeyExpired(hash, local_data):
+                if hash in local_stored_hashkey:
+                    if isHaskeyExpired(local_stored_hashkey[hash]['scan_date'], local_data):
                         hashKeyList.append(hash)
                 else:
                     hashKeyList.append(hash)
@@ -91,12 +103,12 @@ def getUnmappedOrExpiredHashkey (filename, local_data):
     return hashKeyList
 
 def saveDataInJson(response, localData):
-    print("Response: ")
-    print(response)
-    print(type(response))
-    print("LocalData: ")
-    print(localData)
-    print(type(localData));
+    # print("Response: ")
+    # print(response)
+    # print(type(response))
+    # print("LocalData: ")
+    # print(localData)
+    # print(type(localData));
     final_output = {
         "data":[]
     }
@@ -148,7 +160,7 @@ def uploadFile():
     # print("HashList: ")
     # print(hashList)
     for line in hashList:
-        # print("https://www.virustotal.com/api/v3/files/"+line.strip());  
+        print("https://www.virustotal.com/api/v3/files/"+line.strip());  
         req=requests.get("https://www.virustotal.com/api/v3/files/"+line.strip(), headers={"x-apikey": "4fe780bd9b32c34f4f7e9b7c6ff12569961618cda34096355771a958e2fc4bec"})
         resp = req.json()
         
@@ -184,14 +196,3 @@ def uploadFile():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=port);
-
-
-#     data = {
-#     "president": {
-#         "name": "Zaphod Beeblebrox",
-#         "species": "Betelgeusian"
-#     }
-# }
-
-# with open("data_file.json", "w") as write_file:
-#     json.dump(data, write_file)
